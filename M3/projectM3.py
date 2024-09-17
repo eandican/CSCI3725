@@ -1,3 +1,12 @@
+"""
+Name: Emre Andican
+Class: CSCI 3725
+Project Name: TripAdvisor
+Description: This is a system that randomly selects one of two seasons (Winter or Summer), then chooses a destination 
+based on the probaility of me visiting (given financial and time constraints), and then chooses an activity to focus on
+during a trip to this place (probailties are decided on the most common activities within this spot). I utilize
+Matplotlib and Pillow to help visualize this to statisfy the visual arts component of this task :).
+"""
 import numpy as np
 import matplotlib.pyplot as plt 
 from PIL import Image
@@ -34,9 +43,24 @@ class TripAdvisor:
         self.activity_matrix = activity_matrix
 
     def get_season(self):
+        """
+          Decides whether my yearly trip will be a winter or summer vacation 
+
+          Return: 1 of 2 seasons within TRIP_SEASON (Winter or Summer)
+
+        """
         return np.random.choice(TRIP_SEASON)
     
     def get_destination(self, current_season):
+        """
+          Decides where I will go on vacation based on the season
+
+          Args: current_season (str) - the season of the vacation
+
+          Return: a destination which is ultimately decided based on probabilites of my ability to visit
+          through a transition matrix
+
+        """
         if current_season == "Winter":
             return np.random.choice(
                 WINTER_DESTINATION,
@@ -50,12 +74,29 @@ class TripAdvisor:
             )
         
     def get_activities(self, destination):
+        """
+          Decides what I will do based on the location of my planned vacation
+
+          Args: destination (str) - where I will be going
+
+          Return: an activity which is ultimately decided based on the popularity of activities within this location/
+          accessbility of these activites through a transition matrix
+
+        """
         return np.random.choice(
             ACTIVITIES,
             p=[self.activity_matrix[destination][next_activity] for next_activity in ACTIVITIES]
         )
     
     def plan_trip(self):
+        """ 
+        Calls all of the above functions, starting with trip season, and creating a list that contains
+        the season, location, and main activity of this trip
+
+        Return: our trip in list form.
+         
+        """
+
         trip = []
     
         season = self.get_season()
@@ -86,25 +127,29 @@ def main():
     upcoming_trip = trip_adivsor.plan_trip()
     print(upcoming_trip)
 
-    winter_season = Image.open("winter.jpg")
-    summer_season = Image.open("summer.jpg")
+    # Variables for our images
 
-    japan_flag = Image.open("japan.jpg")
-    swiss_flag = Image.open("swiss.jpg")
-    canada_flag = Image.open("canada.jpg")
-    hawaii_flag = Image.open("hawaii.jpg")
-    turks_flag = Image.open("turks.jpg")
-    italy_flag = Image.open("italy.jpg")
+    winter_season = Image.open("Assets/winter.jpg")
+    summer_season = Image.open("Assets/summer.jpg")
 
-    skiing = Image.open("skiing.jpg")
-    surfing = Image.open("surfing.jpg")
-    hiking = Image.open("hiking.jpg")
-    dining = Image.open("dining.jpg")
-    sightseeing = Image.open("sightseeing.jpg")
-    beaching = Image.open("beaching.jpg")
+    japan_flag = Image.open("Assets/japan.jpg")
+    swiss_flag = Image.open("Assets/swiss.jpg")
+    canada_flag = Image.open("Assets/canada.jpg")
+    hawaii_flag = Image.open("Assets/hawaii.jpg")
+    turks_flag = Image.open("Assets/turks.jpg")
+    italy_flag = Image.open("Assets/italy.jpg")
+
+    skiing = Image.open("Assets/skiing.jpg")
+    surfing = Image.open("Assets/surfing.jpg")
+    hiking = Image.open("Assets/hiking.jpg")
+    dining = Image.open("Assets/dining.jpg")
+    sightseeing = Image.open("Assets/sightseeing.jpg")
+    beaching = Image.open("Assets/beaching.jpg")
 
     fig, ax = plt.subplots()
     x_values = np.arange(len(upcoming_trip))
+
+    # Decides what image to present based on the value
 
     for i, x in enumerate(upcoming_trip):
         if x == "Winter":
@@ -136,6 +181,8 @@ def main():
         elif x == "Beaching":
             ax.imshow(beaching, extent=[i - 0.5, i + 0.5, -0.5, 0.5])
 
+    # Creates plot space / graph
+            
     ax.set_xlim(-0.5, len(upcoming_trip) - 0.5)
     ax.set_ylim(-1, 1)
     ax.set_xticks(x_values)
@@ -143,11 +190,14 @@ def main():
     ax.set_yticks([])
     ax.set_title("Emre's Next Trip")
 
+    # Helps remove gridlines
+
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+
     plt.show()
 
 if __name__ == "__main__":
     main()
-
-
-        
-    
